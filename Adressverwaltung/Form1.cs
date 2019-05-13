@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -9,14 +9,19 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using System.IO;
+using System.Xml.Linq;
 
 namespace Adressverwaltung
+
 {
     public partial class Form1 : Form
     {
-        static DataSet ds;
-        static DataTable dt;
-        static DataRow dr;
+
+        static DataSet ds = new DataSet ("Data");
+        static DataTable table = new DataTable ();
+
+        
 
         public bool IsPostBack { get; private set; }
 
@@ -25,23 +30,23 @@ namespace Adressverwaltung
             InitializeComponent();
 
         }
-        protected void Page_Load(object sender, EventArgs e)
+        //protected void Page_Load(object sender, EventArgs e)
 
-        {
+        //{
 
-            if (!IsPostBack)
+          //  if (!IsPostBack)
 
-            {
+            //{
 
-                ds = new DataSet();
+              //  ds = new DataSet();
 
-                ds.ReadXml(MapPath("data.xml"));
+                //ds.ReadXml(MapPath("adress.xml"));
 
-                dt = ds.Tables["student"];
+                //dt = ds.Tables["Data"];
 
-            }
+            //}
 
-        }
+//        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -52,34 +57,71 @@ namespace Adressverwaltung
 
         }
 
-        private void save_Click(object sender, EventArgs e)
+        private void save_Click_1(object sender, EventArgs e)
         {
 
-            dr = dt.NewRow();//System.NullReferenceException: "Der Objektverweis wurde nicht auf eine Objektinstanz festgelegt."
+            if (!File.Exists("H:/Documents/Adressverwaltung-master/adress.xml"))
+            {
+                XmlWriter xmlWriter = XmlWriter.Create("H:/Documents/Adressverwaltung-master/adress.xml");
+                xmlWriter.WriteStartDocument();
+                xmlWriter.WriteStartElement("users");
+                xmlWriter.WriteStartElement("adresse");
 
-            dr["Firstname"] = firstname.Text;
+                xmlWriter.WriteStartElement("Firstname");
+                xmlWriter.WriteString(firstname.Text);
+                xmlWriter.WriteEndElement();
 
-            dr["Lastname"] = Lastname.Text;
+                xmlWriter.WriteStartElement("Lastname");
+                xmlWriter.WriteString(lastname.Text);
+                xmlWriter.WriteEndElement();
 
-            dr["E-Mail"] = mailaddress.Text;
+                xmlWriter.WriteStartElement("E-Mail");
+                xmlWriter.WriteString(mailaddress.Text);
+                xmlWriter.WriteEndElement();
 
-            dr["Telefon"] = phonenumber.Text;
+                xmlWriter.WriteStartElement("Phonenumber");
+                xmlWriter.WriteString(phonenumber.Text);
+                xmlWriter.WriteEndElement();
 
-            dr["Straße"] = street.Text;
+                xmlWriter.WriteStartElement("Street");
+                xmlWriter.WriteString(street.Text);
+                xmlWriter.WriteEndElement();
 
-            dr["Hausnummer"] = housenumber.Text;
+                xmlWriter.WriteStartElement("House-Number");
+                xmlWriter.WriteString(housenumber.Text);
+                xmlWriter.WriteEndElement();
 
-            dr["Postleitzahl"] = Postcode.Text;
+                xmlWriter.WriteStartElement("Postcode");
+                xmlWriter.WriteString(Postcode.Text);
+                xmlWriter.WriteEndElement();
 
-            dr["Ort"] = city.Text;
+                xmlWriter.WriteStartElement("City");
+                xmlWriter.WriteString(city.Text);
+                xmlWriter.WriteEndDocument();
+                xmlWriter.Close();
+            }
+            else
+            {
+                XDocument xDocument = XDocument.Load("H:/Documents/Adressverwaltung-master/adress.xml");
+                XElement root = xDocument.Element("users");
+                IEnumerable<XElement> rows = root.Descendants("adresse");
+                XElement firstRow = xDocument.Element("City");
+                xDocument.Add(
+                   new XElement("adresse",
+                   new XElement("Firstname", firstname.Text),
+                   new XElement("Lastname", lastname.Text),
+                   new XElement("E-Mail", mailaddress.Text),
+                   new XElement("Phonenumber", phonenumber.Text),
+                   new XElement("Street", street.Text),
+                   new XElement("House-Number", housenumber.Text),
+                   new XElement("Postcode", Postcode.Text),
+                   new XElement("City", city.Text)));
 
-            dt.Rows.Add(dr);
 
-            XmlTextWriter xmlSave = new XmlTextWriter("./Adressverwaltung/adress.xml", Encoding.UTF8);
-            xmlSave.Formatting = Formatting.Indented;
-            ds.DataSetName = "Data";
-            ds.WriteXml(xmlSave);
-            xmlSave.Close();
+                xDocument.Save("H:/Documents/Adressverwaltung-master/adress.xml");
+            }
+
+
         }
 
         private XmlReader MapPath(string v)
@@ -87,7 +129,7 @@ namespace Adressverwaltung
             throw new NotImplementedException();
         }
 
-        private void mailaddress_TextChanged(object sender, EventArgs e)
+        private void mailaddress_TextChanged_1(object sender, EventArgs e)
         {
             String UserEmail = mailaddress.Text;
             if (IsValidEmail(UserEmail))
@@ -113,13 +155,12 @@ namespace Adressverwaltung
 
         }
 
-        private void label10_Click(object sender, EventArgs e)
+        
+        private void firstname_TextChanged(object sender, EventArgs e)
         {
-            ds = new DataSet();
 
-            ds.ReadXml(MapPath("data.xml"));
-
-            dt = ds.Tables["student"];
         }
+
+       
     }
 }
