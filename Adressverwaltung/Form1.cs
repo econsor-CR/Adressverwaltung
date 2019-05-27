@@ -63,41 +63,46 @@ namespace Adressverwaltung
         {
             if (firstname.Text != "" || lastname.Text != "" || mailaddress.Text != "" || phonenumber.Text != "" || street.Text != "" || housenumber.Text != "" || postalcode.Text != "" || city.Text != "")
             {
-                XmlDocument doc = new XmlDocument();
-                doc.Load("C:/Users/econsor_cr/source/repos/Adressverwaltung/adress.xml");
-                XmlNode address = doc.CreateElement("adresse");
-                XmlNode Firstname = doc.CreateElement("Firstname");
-                Firstname.InnerText = firstname.Text;
-                address.AppendChild(Firstname);
-                XmlNode Lastname = doc.CreateElement("Lastname");
-                Lastname.InnerText = lastname.Text;
-                address.AppendChild(Lastname);
-                XmlNode Mail = doc.CreateElement("E-Mail");
-                Mail.InnerText = mailaddress.Text;
-                address.AppendChild(Mail);
-                XmlNode Phone = doc.CreateElement("Phonenumber");
-                Phone.InnerText = phonenumber.Text;
-                address.AppendChild(Phone);
-                XmlNode Street = doc.CreateElement("Street");
-                Street.InnerText = street.Text;
-                address.AppendChild(Street);
-                XmlNode House = doc.CreateElement("House-Number");
-                House.InnerText = housenumber.Text;
-                address.AppendChild(House);
-                XmlNode Postalcode = doc.CreateElement("Postcode");
-                Postalcode.InnerText = postalcode.Text;
-                address.AppendChild(Postalcode);
-                XmlNode City = doc.CreateElement("City");
-                City.InnerText = city.Text;
-                address.AppendChild(City);
-                doc.DocumentElement.AppendChild(address);
-                doc.Save("C:/Users/econsor_cr/source/repos/Adressverwaltung/adress.xml");
+                SaveXML();
+                MessageBox.Show("Vielen Dank. Ihre Adressdaten wurden gespeichert");
             }
             else
             {
                 MessageBox.Show("Bitte alle Felder ausfüllen", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
+        }
+        private void SaveXML()
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load("C:/Users/econsor_cr/source/repos/Adressverwaltung/adress.xml");
+            XmlNode address = doc.CreateElement("adresse");
+            XmlNode Firstname = doc.CreateElement("Firstname");
+            Firstname.InnerText = firstname.Text;
+            address.AppendChild(Firstname);
+            XmlNode Lastname = doc.CreateElement("Lastname");
+            Lastname.InnerText = lastname.Text;
+            address.AppendChild(Lastname);
+            XmlNode Mail = doc.CreateElement("E-Mail");
+            Mail.InnerText = mailaddress.Text;
+            address.AppendChild(Mail);
+            XmlNode Phone = doc.CreateElement("Phonenumber");
+            Phone.InnerText = phonenumber.Text;
+            address.AppendChild(Phone);
+            XmlNode Street = doc.CreateElement("Street");
+            Street.InnerText = street.Text;
+            address.AppendChild(Street);
+            XmlNode House = doc.CreateElement("House-Number");
+            House.InnerText = housenumber.Text;
+            address.AppendChild(House);
+            XmlNode Postalcode = doc.CreateElement("Postcode");
+            Postalcode.InnerText = postalcode.Text;
+            address.AppendChild(Postalcode);
+            XmlNode City = doc.CreateElement("City");
+            City.InnerText = city.Text;
+            address.AppendChild(City);
+            doc.DocumentElement.AppendChild(address);
+            doc.Save("C:/Users/econsor_cr/source/repos/Adressverwaltung/adress.xml");
         }
 
         private XmlReader MapPath(string v)
@@ -142,6 +147,7 @@ namespace Adressverwaltung
         
         }
         int nRow;
+        
         private void show_Click(object sender, EventArgs e)
         {
             DataSet dataSet = new DataSet();
@@ -169,7 +175,7 @@ namespace Adressverwaltung
         private void button2_Click(object sender, EventArgs e)
         {
             // nRow = dataGridView1.CurrentCell.RowIndex;
-            if (nRow < dataGridView1.RowCount -1 && !(nRow > dataGridView1.RowCount))
+            if (nRow < dataGridView1.RowCount - 1 && !(nRow > dataGridView1.RowCount))
             {
                 dataGridView1.Rows[nRow].Selected = false;
                 dataGridView1.Rows[++nRow].Selected = true;
